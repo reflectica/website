@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Therapy Session</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./css/tailwind-build.css">
+    <style>
+        body {
+            background-color: #0f0f0f;
+            color: white;
+            font-family: 'Arial', sans-serif;
+        }
+
+        #password-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        #demo-content {
+            display: none;
+        }
+
+        #error-msg {
+            color: red;
+            margin-top: 10px;
+        }
+
+        #start-session-btn, #session-window {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #start-session-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #session-window {
+            display: none;
+            flex-direction: column;
+            border: 8px solid #5271ff;
+            border-radius: 10px;
+            padding: 20px;
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+            margin: auto;
+        }
+
+        .status-box {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            font-size: 16px;
+        }
+
+        .circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background-color: #0f0f0f;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 #5271ff;
+            }
+
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 20px rgba(0, 153, 255, 0);
+            }
+
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(0, 153, 255, 0);
+            }
+        }
+
+        .control-buttons {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .control-buttons button {
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .pause-btn {
+            background-color: #5271ff;
+        }
+
+        .end-btn {
+            background-color: #E53E3E;
+        }
+
+        #transcript {
+            color: #fff;
+            font-size: 18px;
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Password Screen -->
+    <div id="password-screen">
+        <div class="bg-gray-850 p-8 rounded-lg shadow-lg text-center">
+            <h2 class="text-2xl font-bold mb-4 text-white">Enter Password</h2>
+            <input type="password" id="password-input" class="w-full p-2 mb-4 rounded-lg bg-gray-700 text-white" placeholder="Password">
+            <button onclick="checkPassword()" class="bg-gray-900 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg w-full">
+                Submit
+            </button>
+            <p id="error-msg" class="hidden">Incorrect password. Try again!</p>
+        </div>
+    </div>
+
+    <!-- Demo Content -->
+    <div id="demo-content">
+        <!-- Start Session Button -->
+        <div id="start-session-btn">
+            <button class="bg-gray-900 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-lg" onclick="startSession()">Begin Session</button>
+        </div>
+
+        <div>
+            <div class="p-5">
+                <!-- Additional content can go here if needed -->
+            </div>
+        </div>
+
+        <!-- Session Window -->
+        <div id="session-window">
+            <!-- Status Box (Listening/Speaking) -->
+            <div class="status-box" id="status-box">Listening...</div>
+
+            <!-- Animated Circle -->
+            <div class="circle" id="dynamic-circle"></div>
+
+            <!-- Display Text Transcription -->
+            <div id="transcript"></div>
+
+            <!-- Control Buttons -->
+            <div class="control-buttons">
+                <button class="pause-btn text-white" id="pause-btn" onclick="pauseSession()">Pause Session</button>
+                <button class="end-btn text-white" id="end-btn" onclick="endSession()">End Session</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isListening = false;
+        let recognition;
+        const statusBox = document.getElementById('status-box');
+        const transcriptBox = document.getElementById('transcript');
+
+        // Password Check
+        function checkPassword() {
+            const passwordInput = document.getElementById('password-input').value;
+            const errorMsg = document.getElementById('error-msg');
+
+            if (passwordInput === 'lovelace') {
+                document.getElementById('password-screen').style.display = 'none';
+                document.getElementById('demo-content').style.display = 'block';
+            } else {
+                errorMsg.classList.remove('hidden');
+                errorMsg.classList.add('block');
+            }
+        }
+
+        // Initialize the Web Speech API for Speech-to-Text
+        function initializeSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window) {
+                recognition = new webkitSpeechRecognition();
+                recognition.continuous = true;
+                recognition.interimResults = true;
+                recognition.lang = 'en-US';
+
+                recognition.onstart = function () {
+                    isListening = true;
+                    statusBox.innerText = 'Listening...';
+                };
+
+                recognition.onresult = async function (event) {
+                    let interimTranscript = '';
+                    for (let i = event.resultIndex; i < event.results.length; ++i) {
+                        if (event.results[i].isFinal) {
+                            const finalTranscript = event.results[i][0].transcript;
+                            transcriptBox.innerText = finalTranscript;
+                            // Call GPT-4 for response
+                            const gptResponse = await getGPTResponse(finalTranscript);
+                            // Convert GPT-4 response to speech
+                            speakResponse(gptResponse);
+                        } else {
+                            interimTranscript += event.results[i][0].transcript;
+                        }
+                    }
+                    transcriptBox.innerText = interimTranscript;
+                };
+
+                recognition.onerror = function (event) {
+                    statusBox.innerText = 'Error occurred: ' + event.error;
+                };
+
+                recognition.onend = function () {
+                    isListening = false;
+                    statusBox.innerText = 'Session Ended';
+                };
+            } else {
+                alert('Speech Recognition API is not supported in your browser.');
+            }
+        }
+
+        // Call GPT-4 API
+        async function getGPTResponse(userText) {
+        const apiKey = "sk-proj-ZUk8FLdodqKhC9apJ1PIT3BlbkFJQDwZH8Stpb5zPZ5hE1oe";
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+            model: "gpt-4",
+            messages: [
+                {
+                    role: "system",
+                    content: "You are a therapist. Act like a therapist and lead the conversation. Don't rely on the user to lead the conversation. Be empathetic but do not be repetitive. Never repeat what the user says back to them, instead, try to add novel insights like a real-life therapist would. Do not be generic and make sure your advice is based on psychology and science. Use the internet and your knowledge of DSM-5 research to make your insights powerful and unique. Do not exceed 5 sentences."
+                },
+                {
+                    role: "user",
+                    content: userText
+                }
+            ]
+            })
+        });
+        const data = await response.json();
+        return data.choices[0].message.content;
+        }
+
+        // Convert Text to Speech using OpenAI's Text-to-Speech API with Alloy voice
+        async function speakResponse(text) {
+            const apiKey = "sk-proj-ZUk8FLdodqKhC9apJ1PIT3BlbkFJQDwZH8Stpb5zPZ5hE1oe";
+            const response = await fetch('https://api.openai.com/v1/audio/text-to-speech', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    text: text,
+                    voice: "alloy"
+                })
+            });
+
+            if (!response.ok) {
+                console.error('Error with OpenAI API:', response.statusText);
+                return;
+            }
+
+            const audioData = await response.json();
+            const audioUrl = audioData.audio_url;  // The URL of the generated speech audio
+
+            // Play the audio
+            const audio = new Audio(audioUrl);
+            audio.play();
+
+            statusBox.innerText = 'Speaking...';
+
+            audio.onended = () => {
+                statusBox.innerText = 'Listening...';
+            };
+        }
+
+
+        // Start Session
+        function startSession() {
+            document.getElementById('start-session-btn').style.display = 'none';
+            document.getElementById('session-window').style.display = 'flex';
+            initializeSpeechRecognition();
+            recognition.start();
+        }
+
+        // Pause Session
+        function pauseSession() {
+            const pauseBtn = document.getElementById('pause-btn');
+            if (isListening) {
+                recognition.stop();
+                pauseBtn.innerText = 'Resume Session';
+                statusBox.innerText = 'Paused...';
+                isListening = false;
+            } else {
+                recognition.start();
+                pauseBtn.innerText = 'Pause Session';
+                statusBox.innerText = 'Listening...';
+                isListening = true;
+            }
+        }
+
+        // End Session
+        function endSession() {
+            recognition.stop();
+            document.getElementById('session-window').style.display = 'none';
+            document.getElementById('start-session-btn').style.display = 'flex';
+        }
+    </script>
+
+</body>
+</html>
