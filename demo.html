@@ -241,8 +241,7 @@
             </p>
         </div>
     </main>
-
-     <script>
+    <script>
         document.getElementById('demo-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -270,49 +269,43 @@
             };
             
             try {
-                // Create the email subject and body
-                const subject = `Demo Request from ${data.name}`;
-                const body = `New demo request:
-
-Name: ${data.name}
-Email: ${data.email}
-Company: ${data.company}
-Message: ${data.message}
-
-Please reach out to schedule a demo.`;
+                // Send to Formspree
+                const response = await fetch('https://formspree.io/f/mwpqqzvr', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: data.name,
+                        email: data.email,
+                        company: data.company,
+                        message: data.message,
+                        _subject: `Demo Request from ${data.name}`
+                    })
+                });
                 
-                // Create mailto URL
-                const mailtoUrl = `mailto:tim@reflectica.ai?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-                
-                // Show success message first
-                setTimeout(() => {
+                if (response.ok) {
+                    // Show success message
+                    successMessage.innerHTML = `
+                        <i class="bi bi-check-circle mr-2"></i>
+                        Thank you! Your demo request has been sent successfully. We'll get back to you soon.
+                    `;
                     successMessage.style.display = 'block';
                     this.reset();
-                    
-                    // Open mailto link
-                    try {
-                        window.open(mailtoUrl, '_self');
-                    } catch (mailtoError) {
-                        // Fallback - try using window.location
-                        window.location.href = mailtoUrl;
-                    }
-                    
-                    // Reset button state
-                    submitBtn.disabled = false;
-                    btnText.style.display = 'inline';
-                    btnLoading.style.display = 'none';
-                }, 1000);
+                } else {
+                    throw new Error('Form submission failed');
+                }
                 
             } catch (error) {
                 console.error('Error:', error);
-                errorText.textContent = 'Failed to send request. Please try again or email us directly.';
+                errorText.textContent = 'Failed to send request. Please try again or email us directly at tim@reflectica.ai';
                 errorMessage.style.display = 'block';
-                
-                // Reset button state
-                submitBtn.disabled = false;
-                btnText.style.display = 'inline';
-                btnLoading.style.display = 'none';
             }
+            
+            // Reset button state
+            submitBtn.disabled = false;
+            btnText.style.display = 'inline';
+            btnLoading.style.display = 'none';
         });
     </script>
 </body>
