@@ -13,7 +13,7 @@
 
     <!--Tailwind build stylesheet attached, in-line CSS for all other stylings-->
     <link rel="stylesheet" href="./tailwind-css/tailwind-build.css">
-
+    
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"
         integrity="sha512-dPXYcDub/aeb08c63jRq/k6GaKccl256JQy/AnOq7CAnEZ9FzSL9wSbcZkMp4R26vBsMLFYH4kQ67/bbV8XaCQ=="
@@ -38,18 +38,228 @@
             header {
                 flex-direction: column;
                 align-items: center;
+                padding: 15px 20px !important;
+                height: auto !important;
             }
 
             header .header-links {
                 display: none;
             }
 
+            /* Mobile hamburger menu */
+            .mobile-menu-toggle {
+                display: block;
+                background: none;
+                border: none;
+                color: white;
+                font-size: 24px;
+                cursor: pointer;
+                position: absolute;
+                right: 20px;
+                top: 25px;
+            }
+
+            .mobile-menu {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 250px;
+                height: 100vh;
+                background: rgba(0, 0, 0, 0.95);
+                backdrop-filter: blur(10px);
+                transition: right 0.3s ease;
+                z-index: 30;
+                padding: 80px 20px 20px;
+            }
+
+            .mobile-menu.active {
+                right: 0;
+            }
+
+            .mobile-menu a {
+                display: block;
+                color: white;
+                text-decoration: none;
+                padding: 15px 0;
+                font-size: 18px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .mobile-menu-close {
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                background: none;
+                border: none;
+                color: white;
+                font-size: 24px;
+                cursor: pointer;
+            }
+
+            /* Improved mobile typography */
+            .hero-section .gradient-text {
+                font-size: 2.5rem !important;
+                line-height: 1.2 !important;
+                margin-bottom: 1rem !important;
+            }
+
+            .hero-section {
+                padding-top: 120px !important;
+            }
+
             .hero-section #dashboard {
                 transform: perspective(800px) translateX(0px) translateY(8px) scale(0.7) rotate(0deg) rotateX(60deg);
             }
 
+            /* Team section mobile fonts */
+            #team h2 {
+                font-size: 1.8rem !important;
+                line-height: 1.3 !important;
+                padding: 0 15px;
+            }
+
+            /* Features section mobile fonts */
+            #features-display h3 {
+                font-size: 1.5rem !important;
+                line-height: 1.4 !important;
+                margin-bottom: 1rem !important;
+            }
+
+            #features-display p {
+                font-size: 1rem !important;
+                line-height: 1.5 !important;
+            }
+
+            /* Integration cards mobile */
+            #integration-cards h2 {
+                font-size: 1.8rem !important;
+                line-height: 1.3 !important;
+                padding: 0 15px;
+            }
+
+            #integration-cards p {
+                font-size: 1rem !important;
+                line-height: 1.5 !important;
+                padding: 0 15px;
+            }
+
+            .integration-card h3 {
+                font-size: 1.2rem !important;
+                line-height: 1.3 !important;
+            }
+
+            .integration-card p {
+                font-size: 0.95rem !important;
+                line-height: 1.4 !important;
+            }
+
+            /* Road ahead mobile */
+            #road-ahead h2 {
+                font-size: 1.8rem !important;
+                line-height: 1.3 !important;
+            }
+
+            #road-ahead p {
+                font-size: 1rem !important;
+                line-height: 1.5 !important;
+            }
+
+            .milestone-card {
+                width: 90% !important;
+                margin: 0 auto 20px !important;
+            }
+
+            .milestone-card .tw-text-2xl {
+                font-size: 1.3rem !important;
+            }
+
+            .milestone-card .tw-text-sm {
+                font-size: 0.95rem !important;
+            }
+
+            .milestone-card ul {
+                font-size: 0.9rem !important;
+                line-height: 1.4 !important;
+            }
+
+            /* Organization section mobile */
+            #organization h2 {
+                font-size: 1.8rem !important;
+                line-height: 1.3 !important;
+            }
+
+            #organization h3 {
+                font-size: 1.3rem !important;
+                line-height: 1.3 !important;
+            }
+
+            #organization p {
+                font-size: 0.95rem !important;
+                line-height: 1.4 !important;
+            }
+
+            #organization .tw-w-\[\450\px\] {
+                width: 100%;
+                padding: 1.5rem !important;
+            }
+
+            /* FAQ section mobile */
+            #FAQs h3 {
+                font-size: 1.8rem !important;
+                line-height: 1.3 !important;
+                padding: 0 15px;
+            }
+
+            .faq-accordion {
+                font-size: 1.1rem !important;
+                line-height: 1.3 !important;
+                padding: 18px !important;
+            }
+
+            .faq .content {
+                font-size: 0.95rem !important;
+                line-height: 1.4 !important;
+                padding: 0 18px 18px !important;
+            }
+
+            #FAQs .tw-max-w-\[\850\px\] {
+                max-width: 100%;
+                padding: 0 15px;
+            }
+
+            #FAQs .tw-text-3xl {
+                font-size: 1.5rem !important;
+                line-height: 1.3 !important;
+                text-align: center;
+                padding: 0 15px;
+            }
+
+            /* Footer mobile */
+            footer {
+                flex-direction: column;
+                align-items: center;
+                padding: 2rem 1rem !important;
+            }
+
+            footer .tw-w-\[\250px\] {
+                width: 100%;
+                text-align: center;
+                margin-bottom: 2rem;
+            }
+
+            footer h2 {
+                font-size: 1.5rem !important;
+            }
+
+            footer a, footer div {
+                font-size: 1rem !important;
+                line-height: 1.4 !important;
+            }
+
+            /* General mobile improvements */
             .carousel-container {
                 max-width: 100%;
+                padding: 0 15px;
             }
 
             .carousel-img {
@@ -58,34 +268,49 @@
             }
 
             #features-display {
-                padding: 2%;
+                padding: 2% 1rem;
             }
 
-            #features-display .tw-max-w-[50%] {
+            #features-display .tw-max-w-\[50\%\] {
+                max-width: 100%;
+                padding: 0 1rem;
+            }
+
+            #features-display .tw-max-w-\[30\%\] {
                 max-width: 100%;
             }
 
-            #features-display .tw-max-w-[30%] {
-                max-width: 100%;
+            /* Better button sizing on mobile */
+            .btn {
+                font-size: 1rem !important;
+                padding: 12px 20px !important;
             }
 
-            #organization .tw-w-[450px] {
-                width: 100%;
+            /* Ensure all text is readable */
+            body {
+                font-size: 16px !important;
+                line-height: 1.5 !important;
             }
+        }
 
-            #FAQs .tw-max-w-[850px] {
-                max-width: 100%;
-            }
+        /* Desktop hamburger menu hidden */
+        .mobile-menu-toggle {
+            display: none;
+        }
 
-            footer {
-                flex-direction: column;
-                align-items: center;
-            }
+        .mobile-menu {
+            display: none;
+        }
 
-            footer .tw-w-[250px] {
-                width: 100%;
-                text-align: center;
-            }
+    </style>
+
+    <style>
+        .footer-link {
+            transition: color 0.3s ease;
+        }
+        
+        .footer-link:hover {
+            color: #5271ff;
         }
     </style>
 
@@ -104,6 +329,12 @@
                 style="height: auto; width: 160px;" />
         </a>
 
+        <!-- Mobile hamburger menu button -->
+        <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+            <i class="bi bi-list"></i>
+        </button>
+
+        <!-- Desktop navigation -->
         <div
             class="tw-flex tw-h-full tw-w-max tw-gap-5 tw-text-base max-lg:tw-mt-[30px] max-lg:tw-flex-col max-lg:tw-place-items-end max-lg:tw-gap-5 lg:tw-mx-auto lg:tw-place-items-center">
             <a class="header-links" href="#team"> Team </a>
@@ -119,32 +350,19 @@
                 <span>Demo</span>
             </a>
         </div>
+
+        <!-- Mobile menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <button class="mobile-menu-close" onclick="toggleMobileMenu()">
+                <i class="bi bi-x"></i>
+            </button>
+            <a href="#team" onclick="toggleMobileMenu()">Team</a>
+            <a href="#features-display" onclick="toggleMobileMenu()">Product</a>
+            <a href="#organization" onclick="toggleMobileMenu()">Organization</a>
+            <a href="#FAQs" onclick="toggleMobileMenu()">FAQs</a>
+            <a href="mailto:info@reflectica.ai" onclick="toggleMobileMenu()">Contact</a>
+            <a href="demo.html" onclick="toggleMobileMenu()" style="background: #5271ff; color: white; border-radius: 8px; margin-top: 20px; text-align: center;">Demo</a>
         </div>
-
-        <!--In-line stylings for header-->
-
-        <style>
-            header {
-                color: #b1b1b1;
-            }
-
-            .header-links {
-                display: flex;
-                align-items: center;
-                min-width: fit-content;
-                border-radius: 5px;
-                padding: 5px 10px;
-                transition: background-color 0.5s, color 0.5s;
-            }
-
-            .header-links:hover {
-                color: #5271ff;
-            }
-
-            .header-links {
-                color: rgb(255, 255, 255);
-            }
-        </style>
     </header>
 
     <!--Hero Section-->
@@ -1027,6 +1245,29 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.0/ScrollTrigger.min.js"
     integrity="sha512-AY2+JxnBETJ0wcXnLPCcZJIJx0eimyhz3OJ55k2Jx4RtYC+XdIi2VtJQ+tP3BaTst4otlGG1TtPJ9fKrAUnRdQ=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+function toggleMobileMenu() {
+    const mobileMenu = document.getElementById('mobileMenu');
+    mobileMenu.classList.toggle('active');
+}
+
+// Close mobile menu when clicking outside
+document.addEventListener('click', function(event) {
+    const mobileMenu = document.getElementById('mobileMenu');
+    const toggleButton = document.querySelector('.mobile-menu-toggle');
+    
+    if (!mobileMenu.contains(event.target) && !toggleButton.contains(event.target)) {
+        mobileMenu.classList.remove('active');
+    }
+});
+
+// Close mobile menu on window resize to desktop
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        document.getElementById('mobileMenu').classList.remove('active');
+    }
+});
+</script>
 
 <script src="./index.js"></script>
 
